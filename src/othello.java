@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
 
 public class othello
 {
@@ -229,7 +230,7 @@ public class othello
 		}
 		return current_board;
 	}
-	public static String interpret_col(int col)
+	public static String columnString(int col)
 	{
 		String col_string = "";
 		 switch (col) {
@@ -253,14 +254,61 @@ public class othello
      }
 		 return col_string;
 	}
+	public static int columnInt(String col)
+	{
+		int colInt = 0;
+		 switch (col) {
+         case "a":  colInt = 1;
+                  break;
+         case "b":  colInt = 2;
+                  break;
+         case "c":  colInt = 3;
+                  break;
+         case "d":  colInt = 4;
+                  break;
+         case "e":  colInt = 5;
+                  break;
+         case "f":  colInt = 6;
+                  break;
+         case "g":  colInt = 7;
+                  break;
+         case "h":  colInt = 8;
+         default: colInt = 9;
+                  break;
+     }
+		 return colInt;
+	}
 	public static void main(String[] args)
 	{
 		build_new_board(board);
 		turn = true;
 		Agent agent = new Agent();
-		String[][] board_c = board_copy(board);
-		Move suggested = agent.suggest_move(22, turn, board_c);
-		System.out.printf("Move: %d%s\n", suggested.getRow()+1,interpret_col(suggested.getCollumn()+1));
-		print_board(board);
+		String command = "";
+		Scanner input = new Scanner(System.in);
+		
+		while(!command.equals("exit"))
+		{
+			System.out.println("--------------------------");
+			if(turn)
+			{
+				System.out.println("White's turn");
+			}
+			else
+			{
+				System.out.println("Black's turn");
+			}
+			String[][] board_c = board_copy(board);
+			Move suggested = agent.suggest_move(5, turn, board_c);
+			System.out.printf("Suggested Move: %d%s\n", suggested.getRow()+1,columnString(suggested.getCollumn()+1));
+			print_board(board);
+		
+			System.out.print("Your move: ");
+			command = input.nextLine();
+			int column_command = columnInt(Character.toString(command.toCharArray()[1]));
+			int row_command = Integer.parseInt(Character.toString(command.toCharArray()[0]));
+			HashSet<Move> MoveSet = agent.get_moveset(turn, board);
+			board = make_move(row_command-1,column_command-1,board,MoveSet);
+			turn = !turn;
+		}
 	}
 }
