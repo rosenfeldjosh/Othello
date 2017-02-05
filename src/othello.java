@@ -229,16 +229,38 @@ public class othello
 		}
 		return current_board;
 	}
-
+	public static String interpret_col(int col)
+	{
+		String col_string = "";
+		 switch (col) {
+         case 1:  col_string = "a";
+                  break;
+         case 2:  col_string = "b";
+                  break;
+         case 3:  col_string = "c";
+                  break;
+         case 4:  col_string = "d";
+                  break;
+         case 5:  col_string = "e";
+                  break;
+         case 6:  col_string = "f";
+                  break;
+         case 7:  col_string = "g";
+                  break;
+         case 8:  col_string = "h";
+         default: col_string = "x";
+                  break;
+     }
+		 return col_string;
+	}
 	public static void main(String[] args)
 	{
 		build_new_board(board);
 		turn = true;
 		Agent agent = new Agent();
 		String[][] board_c = board_copy(board);
-		//make_move(4,2,board,agent.get_moveset(turn, board));
-		Move suggested = agent.suggest_move(2, turn, board_c);
-		System.out.printf("Move: %d,%d\n", suggested.getRow()+1,suggested.getCollumn()+1);
+		Move suggested = agent.suggest_move(22, turn, board_c);
+		System.out.printf("Move: %d%s\n", suggested.getRow()+1,interpret_col(suggested.getCollumn()+1));
 		print_board(board);
 	}
 }
