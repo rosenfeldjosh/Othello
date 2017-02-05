@@ -45,8 +45,9 @@ public class othello
 			System.out.println("");
 		}
 	}
-	public static String[][] make_move(int row, int col,String[][] current_board, HashSet<Move> moveset)
+	public static String[][] make_move(int row, int col,String[][] board, HashSet<Move> moveset)
 	{
+		String[][] current_board = board_copy(board);
 		Move comp = new Move(row,col,"");
 		ArrayList<String> directions = new ArrayList<String>();
 		String turn_color;
@@ -235,7 +236,8 @@ public class othello
 		turn = true;
 		Agent agent = new Agent();
 		String[][] board_c = board_copy(board);
-		Move suggested = agent.suggest_move(0, turn, board_c);
+		//make_move(4,2,board,agent.get_moveset(turn, board));
+		Move suggested = agent.suggest_move(2, turn, board_c);
 		System.out.printf("Move: %d,%d\n", suggested.getRow()+1,suggested.getCollumn()+1);
 		print_board(board);
 	}
