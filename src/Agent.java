@@ -13,7 +13,10 @@ public class Agent {
 	private HashSet<Move> create_possible_states(boolean turn,String[][] board)
 	{
 		HashSet<Move> states = new HashSet<Move>();
-		
+		if(board == null)
+		{
+			return states;
+		}
 		String turn_color;
 		if(turn)
 		{
@@ -34,8 +37,12 @@ public class Agent {
 					{
 						if(board[row-1][col] != turn_color && board[row-1][col] != ".")
 						{
-							for(int i = row; i >= 0; i--)
+							for(int i = row-1; i >= 0; i--)
 							{
+								if(board[i][col] == ".")
+								{
+									break;
+								}
 								if(board[i][col] == turn_color)
 								{
 									states.add(new Move(row,col,"UP"));
@@ -48,9 +55,13 @@ public class Agent {
 					{
 						if(board[row-1][col+1] != turn_color && board[row-1][col+1] != ".")
 						{
-							int j = col;
-							for(int i = row; i >= 0; i--)
+							int j = col+1;
+							for(int i = row-1; i >= 0; i--)
 							{
+								if(board[i][j] == ".")
+								{
+									break;
+								}
 								if(board[i][j] == turn_color)
 								{
 									states.add(new Move(row,col,"UPRIGHT"));
@@ -69,8 +80,12 @@ public class Agent {
 						{
 							if(board[row][col+1] != turn_color && board[row][col+1] != ".")
 							{
-								for(int j = col; j < board.length; j++)
+								for(int j = col+1; j < board.length; j++)
 								{
+									if(board[row][j] == ".")
+									{
+										break;
+									}
 									if(board[row][j] == turn_color)
 									{
 										states.add(new Move(row,col,"RIGHT"));
@@ -83,9 +98,13 @@ public class Agent {
 						{
 							if(board[row+1][col+1] != turn_color && board[row+1][col+1] != ".")
 							{
-								int j = col;
-								for(int i = row; i < board.length; i++)
+								int j = col+1;
+								for(int i = row+1; i < board.length; i++)
 								{
+									if(board[i][j] == ".")
+									{
+										break;
+									}
 									if(board[i][j] == turn_color)
 									{
 										states.add(new Move(row,col,"BOTRIGHT"));
@@ -104,8 +123,12 @@ public class Agent {
 						{
 							if(board[row+1][col] != turn_color && board[row+1][col] != ".")
 							{
-								for(int i = row; i < board.length; i++)
+								for(int i = row+1; i < board.length; i++)
 								{
+									if(board[i][col] == ".")
+									{
+										break;
+									}
 									if(board[i][col] == turn_color)
 									{
 										states.add(new Move(row,col,"BOT"));
@@ -118,9 +141,13 @@ public class Agent {
 						{
 							if(board[row+1][col-1] != turn_color && board[row+1][col-1] != ".")
 							{
-								int j = col;
-								for(int i = row; i < board.length; i++)
+								int j = col-1;
+								for(int i = row+1; i < board.length; i++)
 								{
+									if(board[i][j] == ".")
+									{
+										break;
+									}
 									if(board[i][j] == turn_color)
 									{
 										states.add(new Move(row,col,"BOTLEFT"));
@@ -139,8 +166,12 @@ public class Agent {
 							{
 								if(board[row][col-1] != turn_color && board[row][col-1] != ".")
 								{
-									for(int j = col; j > 0; j--)
+									for(int j = col-1; j > 0; j--)
 									{
+										if(board[row][j] == ".")
+										{
+											break;
+										}
 										if(board[row][j] == turn_color)
 										{
 											states.add(new Move(row,col,"LEFT"));
@@ -153,9 +184,14 @@ public class Agent {
 							{
 								if(board[row-1][col-1] != turn_color && board[row-1][col-1] != ".")
 								{
-									int j = col;
-									for(int i = row; i >= 0; i--)
+									int j = col-1;
+									for(int i = row-1; i >= 0; i--)
 									{
+										
+										if(board[i][j] == ".")
+										{
+											break;
+										}
 										if(board[i][j] == turn_color)
 										{
 											states.add(new Move(row,col,"UPLEFT"));
@@ -222,7 +258,7 @@ public class Agent {
 	
 	
 	private String[][] maxMove(HashSet<Move> possibleMoves, boolean color, String[][] board) {
-		String[][] best_board = null;
+		String[][] best_board = board;
 		int best_score = Integer.MIN_VALUE;
 		String[][] current_board = new String[8][8];
 		for(Move m: possibleMoves)
@@ -277,7 +313,7 @@ public class Agent {
 		return best_move; //return that value
 	}
 
-	private Integer count_color(String[][] board, boolean color)
+	public Integer count_color(String[][] board, boolean color)
 	{
 		String our_color = "";
 		int count = 0;

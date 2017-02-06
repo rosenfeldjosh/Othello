@@ -6,6 +6,7 @@ public class othello
 {
 	public static String[][] board = new String [8][8];
 	public static boolean turn;
+
 	
 	public static void build_new_board(String[][] new_board)
 	{
@@ -16,10 +17,10 @@ public class othello
 				new_board[i][j] = ".";
 			}
 		}
-		new_board[new_board.length/2-1][new_board.length/2-1] = "B";
-		new_board[new_board.length/2][new_board.length/2-1] = "W";
-		new_board[new_board.length/2][new_board.length/2] = "B";
-		new_board[new_board.length/2-1][new_board.length/2] = "W";
+		new_board[new_board.length/2-1][new_board.length/2-1] = "W";
+		new_board[new_board.length/2][new_board.length/2-1] = "B";
+		new_board[new_board.length/2][new_board.length/2] = "W";
+		new_board[new_board.length/2-1][new_board.length/2] = "B";
 	}
 	public static String[][] board_copy(String[][] board)
 	{
@@ -74,7 +75,6 @@ public class othello
 		else
 		{
 			current_board[row][col] = turn_color;
-			turn = !turn;
 			for(String direction : directions)
 			{
 				if(direction.equals("UP"))
@@ -249,7 +249,8 @@ public class othello
          case 7:  col_string = "g";
                   break;
          case 8:  col_string = "h";
-         default: col_string = "x";
+         		  break;
+         default: col_string = Integer.toString(col);
                   break;
      }
 		 return col_string;
@@ -273,6 +274,7 @@ public class othello
          case "g":  colInt = 7;
                   break;
          case "h":  colInt = 8;
+         		  break;
          default: colInt = 9;
                   break;
      }
@@ -281,14 +283,38 @@ public class othello
 	public static void main(String[] args)
 	{
 		build_new_board(board);
-		turn = true;
+		turn = false;
 		Agent agent = new Agent();
 		String command = "";
 		Scanner input = new Scanner(System.in);
 		
 		while(!command.equals("exit"))
 		{
+			long startTime = System.currentTimeMillis();
+			long time = 10000;
+			int depthCount=1;
+			Move suggested = new Move(0,0,"");
 			System.out.println("--------------------------");
+			while(System.currentTimeMillis()-startTime < time)
+			{
+				suggested = agent.suggest_move(depthCount, turn, board);
+				depthCount++;
+			}
+			HashSet<Move> MoveSet = agent.get_moveset(turn, board);
+			if(MoveSet.size() == 0)
+			{
+				if(agent.count_color(board, true) > agent.count_color(board, false))
+				{
+					System.out.println("******White Wins!******");
+				}
+				else
+				{
+					System.out.println("******Black Wins!******");
+				}
+				print_board(board);
+				System.out.printf("Score: White:%d Black:%d", agent.count_color(board, true),agent.count_color(board, false));
+				break;
+			}
 			if(turn)
 			{
 				System.out.println("White's turn");
@@ -297,17 +323,15 @@ public class othello
 			{
 				System.out.println("Black's turn");
 			}
-			String[][] board_c = board_copy(board);
-			Move suggested = agent.suggest_move(5, turn, board_c);
 			System.out.printf("Suggested Move: %d%s\n", suggested.getRow()+1,columnString(suggested.getCollumn()+1));
 			print_board(board);
 		
-			System.out.print("Your move: ");
-			command = input.nextLine();
-			int column_command = columnInt(Character.toString(command.toCharArray()[1]));
-			int row_command = Integer.parseInt(Character.toString(command.toCharArray()[0]));
-			HashSet<Move> MoveSet = agent.get_moveset(turn, board);
-			board = make_move(row_command-1,column_command-1,board,MoveSet);
+//			System.out.print("Your move: ");
+//			command = input.nextLine();
+//			int column_command = columnInt(Character.toString(command.toCharArray()[1]));
+//			int row_command = Integer.parseInt(Character.toString(command.toCharArray()[0]));
+
+			board = make_move(suggested.getRow(),suggested.getCollumn(),board,MoveSet);
 			turn = !turn;
 		}
 	}
