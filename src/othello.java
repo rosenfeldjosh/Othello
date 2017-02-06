@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Scanner;
 
+
 public class othello {
 	public static String[][] board = new String[8][8];
 	public static boolean turn;
@@ -238,7 +239,7 @@ public class othello {
 
 		while (!command.equals("exit")) {
 			long startTime = System.currentTimeMillis();
-			long time = 10000; // <---- change for different time caluclations
+			long time = 2000; // <---- change for different time caluclations
 								// (in miliseconds)
 			int depthCount = 1;
 			Move suggested = new Move(0, 0, "");
